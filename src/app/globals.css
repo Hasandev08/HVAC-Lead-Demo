@@ -1,0 +1,103 @@
+@import "tailwindcss";
+
+/*
+ * Brand colors are NOT hardcoded here. layout.tsx injects them from
+ * config/company.ts as --brand / --primary / --accent etc. This file only maps
+ * those runtime variables into Tailwind's theme, so `bg-brand` and `text-accent`
+ * work everywhere and a color change in the config restyles the entire site.
+ */
+@theme inline {
+  --color-brand: var(--brand);
+  --color-brand-dark: var(--brand-dark);
+  --color-primary: var(--primary);
+  --color-primary-dark: var(--primary-dark);
+  --color-accent: var(--accent);
+  --color-accent-dark: var(--accent-dark);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+html {
+  scroll-behavior: smooth;
+  /* The sticky header + emergency banner must not cover anchored sections. */
+  scroll-padding-top: 7rem;
+}
+
+body {
+  background: #fff;
+  color: #0f172a;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* A focus ring that stays visible on both light and dark sections. */
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* --- Scroll reveal ------------------------------------------------------- */
+/*
+ * Progressive enhancement, and it matters more than it looks.
+ *
+ * The hiding is scoped to `.js`, a class an inline script in layout.tsx adds to
+ * <html> before paint. Only JavaScript can un-hide these elements (via the
+ * IntersectionObserver in components/site/Reveal.tsx), so only JavaScript is
+ * allowed to hide them in the first place.
+ *
+ * Without this scoping, any failure to run JS — a crawler, a link preview, a
+ * slow connection mid-pitch — leaves every section below the hero as a blank
+ * colored band. An animation is never worth risking a blank page.
+ */
+.js .reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.js .reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .js .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* --- Decorative ---------------------------------------------------------- */
+
+/* Subtle grid behind dark sections — carries the hero without a stock photo. */
+.bg-grid {
+  background-image:
+    linear-gradient(to right, rgb(255 255 255 / 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgb(255 255 255 / 0.06) 1px, transparent 1px);
+  background-size: 56px 56px;
+}
+
+/* Slow pulse on the emergency banner dot — reads as "live" without being loud. */
+@keyframes soft-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.82);
+  }
+}
+
+.animate-soft-pulse {
+  animation: soft-pulse 2s ease-in-out infinite;
+}
