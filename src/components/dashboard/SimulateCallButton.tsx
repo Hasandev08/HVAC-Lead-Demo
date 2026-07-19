@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { simulateMissedCall } from "@/app/dashboard/actions";
+import { Spinner } from "@/components/Spinner";
 import { company } from "@/config/company";
 
 /**
@@ -62,8 +63,9 @@ export function SimulateCallButton({ mode }: { mode: "live" | "simulated" }) {
         type="button"
         onClick={run}
         disabled={pending || !phone}
-        className="rounded-lg bg-accent px-3.5 py-2 text-sm font-bold text-white transition hover:bg-accent-dark disabled:opacity-60"
+        className="inline-flex items-center gap-2 rounded-lg bg-accent px-3.5 py-2 text-sm font-bold text-white transition hover:bg-accent-dark disabled:opacity-60"
       >
+        {pending && <Spinner className="h-3.5 w-3.5" />}
         {pending ? "Calling…" : "Ring it"}
       </button>
       <button

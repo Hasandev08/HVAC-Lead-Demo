@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { useState, useTransition } from "react";
 import { updateLeadStatus } from "@/app/dashboard/actions";
+import { Spinner } from "@/components/Spinner";
 import { AiDraft } from "./AiDraft";
 import { serviceName } from "@/config/company";
 import {
@@ -86,20 +87,28 @@ function StatusSelect({ lead }: { lead: Lead }) {
   const { status, pending, change } = useStatus(lead);
 
   return (
-    <select
-      value={status}
-      disabled={pending}
-      onChange={(e) => change(e.target.value as LeadStatus)}
-      className={`cursor-pointer rounded-full px-2.5 py-1 text-xs font-semibold ring-1 transition disabled:opacity-60 ${STATUS_STYLES[status]}`}
-    >
-      {(Object.keys(STATUS_LABELS) as LeadStatus[]).map((s) => (
-        <option key={s} value={s}>
-          {STATUS_LABELS[s]}
-        </option>
-      ))}
-    </select>
+    <span className="relative inline-flex items-center">
+      <select
+        value={status}
+        disabled={pending}
+        onChange={(e) => change(e.target.value as LeadStatus)}
+        className={`cursor-pointer rounded-full px-2.5 py-1 text-xs font-semibold ring-1 transition disabled:opacity-60 ${STATUS_STYLES[status]}`}
+      >
+        {(Object.keys(STATUS_LABELS) as LeadStatus[]).map((s) => (
+          <option key={s} value={s}>
+            {STATUS_LABELS[s]}
+          </option>
+        ))}
+      </select>
+
+      {/* Sits outside the select rather than replacing its label, so the row
+          doesn't reflow mid-save. Fading the control alone read as "disabled",
+          not "saving". */}
+      {pending && <Spinner className="ml-1.5 h-3 w-3 text-slate-400" />}
+    </span>
   );
 }
+
 
 function Row({ lead }: { lead: Lead }) {
   const mins = responseMinutes(lead);

@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import { Spinner } from "@/components/Spinner";
 import { login, type LoginState } from "./actions";
 
 const initial: LoginState = { error: null };
@@ -64,6 +65,7 @@ export function LoginForm({ next }: { next: string }) {
           disabled={pending}
           className="flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-5 py-3 font-bold text-white shadow-lg shadow-accent/25 transition hover:bg-accent-dark active:scale-[.99] disabled:opacity-70"
         >
+          {pending && <Spinner />}
           {pending ? "Signing in…" : "Sign in"}
         </button>
       </div>
