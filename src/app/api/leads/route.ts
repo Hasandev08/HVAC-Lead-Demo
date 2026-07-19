@@ -1,4 +1,5 @@
 import { after } from "next/server";
+import { generateAndStoreDraft } from "@/lib/ai";
 import { sendLeadConfirmation, sendOwnerAlert } from "@/lib/email";
 import { validateLead, type Lead } from "@/lib/leads";
 import { clientIp, rateLimit, sweepExpired } from "@/lib/rate-limit";
@@ -80,7 +81,13 @@ export async function POST(request: Request) {
   // Each send swallows its own errors and logs to the messages table, so a dead
   // SMTP server can't turn a saved lead into a failed one.
   after(async () => {
-    await Promise.all([sendLeadConfirmation(lead), sendOwnerAlert(lead)]);
+    // All three run concurrently — the AI draft must not delay the emails, and
+    // a slow or failed draft must not affect them at all.
+    await Promise.all([
+      sendLeadConfirmation(lead),
+      sendOwnerAlert(lead),
+      generateAndStoreDraft(lead),
+    ]);
   });
 
   return Response.json({ ok: true, id: lead.id });

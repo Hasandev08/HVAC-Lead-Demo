@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import { useState, useTransition } from "react";
 import { updateLeadStatus } from "@/app/dashboard/actions";
+import { AiDraft } from "./AiDraft";
 import { serviceName } from "@/config/company";
 import {
   formatDuration,
@@ -119,12 +120,17 @@ function Row({ lead }: { lead: Lead }) {
           </p>
         )}
       </td>
-      <td className="px-4 py-3">
+      <td className="max-w-xs px-4 py-3">
         <p className="text-sm text-slate-700">
           {lead.service ? serviceName(lead.service) : "—"}
         </p>
         {lead.urgency === "asap" && (
           <span className="text-xs font-semibold text-red-600">Emergency</span>
+        )}
+        {lead.ai_draft && (
+          <div className="mt-1.5">
+            <AiDraft draft={lead.ai_draft} />
+          </div>
         )}
       </td>
       <td className="px-4 py-3">
@@ -185,6 +191,12 @@ function Card({ lead }: { lead: Lead }) {
 
       {lead.message && (
         <p className="mt-2.5 line-clamp-2 text-sm text-slate-600">{lead.message}</p>
+      )}
+
+      {lead.ai_draft && (
+        <div className="mt-2.5">
+          <AiDraft draft={lead.ai_draft} />
+        </div>
       )}
     </div>
   );
