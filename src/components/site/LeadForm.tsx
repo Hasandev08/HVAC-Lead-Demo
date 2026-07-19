@@ -133,7 +133,7 @@ export function LeadForm({ variant = "section" }: { variant?: "hero" | "section"
             name="name"
             required
             autoComplete="name"
-            placeholder="Maria Rodriguez"
+            placeholder={company.form.namePlaceholder}
             className={field}
             aria-invalid={Boolean(errors.name)}
           />
@@ -151,7 +151,7 @@ export function LeadForm({ variant = "section" }: { variant?: "hero" | "section"
               type="tel"
               required
               autoComplete="tel"
-              placeholder="(212) 555-0148"
+              placeholder={company.phone.display}
               className={field}
               aria-invalid={Boolean(errors.phone)}
             />
@@ -220,7 +220,7 @@ export function LeadForm({ variant = "section" }: { variant?: "hero" | "section"
             id={`message-${variant}`}
             name="message"
             rows={onHero ? 2 : 3}
-            placeholder="AC is running but blowing warm air…"
+            placeholder={company.form.messagePlaceholder}
             className={`${field} resize-none`}
           />
           {errors.message && <p className={errorText}>{errors.message}</p>}

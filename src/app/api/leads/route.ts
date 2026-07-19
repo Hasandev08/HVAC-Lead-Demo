@@ -1,6 +1,8 @@
 import { after } from "next/server";
 import { generateAndStoreDraft } from "@/lib/ai";
 import { sendLeadConfirmation, sendOwnerAlert } from "@/lib/email";
+import { leadConfirmationSms } from "@/lib/missed-call";
+import { sendSms } from "@/lib/sms";
 import { validateLead, type Lead } from "@/lib/leads";
 import { clientIp, rateLimit, sweepExpired } from "@/lib/rate-limit";
 import { supabaseAdmin } from "@/lib/supabase-admin";
@@ -87,6 +89,14 @@ export async function POST(request: Request) {
       sendLeadConfirmation(lead),
       sendOwnerAlert(lead),
       generateAndStoreDraft(lead),
+      // The confirmation text. This is what the site promises the customer
+      // ("we'll text you within minutes"), so it fires on every form submit.
+      sendSms({
+        to: lead.phone,
+        body: leadConfirmationSms(lead),
+        leadId: lead.id,
+        kind: "lead_confirmation",
+      }),
     ]);
   });
 

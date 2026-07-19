@@ -61,7 +61,7 @@ export async function generateDraft(lead: Lead): Promise<string> {
   const service = lead.service ? serviceName(lead.service) : "not specified";
   const urgency = lead.urgency ? urgencyLabel(lead.urgency) : "not specified";
 
-  const prompt = `You write text messages for ${company.name}, an HVAC company in New York City.
+  const prompt = `You write text messages for ${company.name}, a ${company.trade} company in ${company.location}.
 
 Write a short reply the owner will send to a new lead.
 

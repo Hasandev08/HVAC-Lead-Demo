@@ -36,9 +36,14 @@ export type Review = {
   when: string;
 };
 
-export type Borough = {
+/**
+ * A chunk of the service area. Deliberately generic names — these are NYC
+ * boroughs today, but they'd be suburbs for a Dallas company or counties for a
+ * rural one, and the components must not care which.
+ */
+export type Region = {
   name: string;
-  neighborhoods: string[];
+  areas: string[];
 };
 
 export const company = {
@@ -46,6 +51,14 @@ export const company = {
   /** Split for the two-tone logo lockup. */
   logo: { primary: "Empire", secondary: "Air & Heating" },
   tagline: "NYC's Same-Day Heating & Cooling Experts",
+
+  /**
+   * The trade and the market, in plain words. Used where copy has to name what
+   * the business actually does — currently the AI prompt. Change these when
+   * reskinning to another trade ("roofing", "plumbing") or city.
+   */
+  trade: "HVAC",
+  location: "New York City",
 
   phone: {
     /** What the customer reads. */
@@ -258,14 +271,36 @@ export const company = {
     },
   ] satisfies Review[],
 
+  /**
+   * Section headings. These live here because they name the trade and the
+   * market — "Heating & cooling, done right" is meaningless for a roofer.
+   * Generic product copy (button labels, form hints) stays in the components.
+   */
+  sections: {
+    services: {
+      eyebrow: "What We Do",
+      title: "Heating & cooling, done right the first time",
+      description:
+        "Whatever's broken, we've seen it before — in a pre-war walk-up, a brownstone, or a new build.",
+    },
+    reviews: { eyebrow: "Reviews", title: "What your neighbors say" },
+    serviceArea: { eyebrow: "Service Area" },
+    comfortClub: { eyebrow: "Maintenance Plans" },
+    /** The catch-all card at the end of the service-area grid. */
+    areaFallback: {
+      title: "Don't see your area?",
+      body: "We cover the whole city. Call and we'll tell you straight whether we can get to you today.",
+    },
+  },
+
   serviceArea: {
     headline: "Serving All Five Boroughs",
     description:
       "Trucks staged across the city, so we reach most addresses within a couple of hours.",
-    boroughs: [
+    regions: [
       {
         name: "Manhattan",
-        neighborhoods: [
+        areas: [
           "Upper East Side",
           "Upper West Side",
           "Harlem",
@@ -276,7 +311,7 @@ export const company = {
       },
       {
         name: "Brooklyn",
-        neighborhoods: [
+        areas: [
           "Park Slope",
           "Bay Ridge",
           "Williamsburg",
@@ -287,7 +322,7 @@ export const company = {
       },
       {
         name: "Queens",
-        neighborhoods: [
+        areas: [
           "Astoria",
           "Long Island City",
           "Forest Hills",
@@ -298,7 +333,7 @@ export const company = {
       },
       {
         name: "The Bronx",
-        neighborhoods: [
+        areas: [
           "Riverdale",
           "Pelham Bay",
           "Throgs Neck",
@@ -308,9 +343,9 @@ export const company = {
       },
       {
         name: "Staten Island",
-        neighborhoods: ["St. George", "Tottenville", "Great Kills", "New Dorp"],
+        areas: ["St. George", "Tottenville", "Great Kills", "New Dorp"],
       },
-    ] satisfies Borough[],
+    ] satisfies Region[],
   },
 
   /** The lead form's "when do you need us" options. */
@@ -326,6 +361,10 @@ export const company = {
     subheading:
       "Tell us what's going on. We'll text you back within minutes — not tomorrow.",
     submitLabel: "Request Service",
+    /** Example values in the form. Regional — a NYC area code on a Texas site
+     *  is exactly the kind of detail a prospect notices. */
+    messagePlaceholder: "AC is running but blowing warm air…",
+    namePlaceholder: "Maria Rodriguez",
     success: {
       heading: "Help is on the way.",
       body: "Check your phone — we're texting you now to confirm. A confirmation email is on its way too.",

@@ -2,7 +2,8 @@
 
 import { revalidatePath } from "next/cache";
 import { runFollowUps } from "@/lib/follow-up";
-import type { LeadStatus } from "@/lib/leads";
+import { normalizeUsPhone, type LeadStatus } from "@/lib/leads";
+import { handleMissedCall } from "@/lib/missed-call";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { requireOwner } from "@/lib/supabase-server";
 
@@ -62,4 +63,25 @@ export async function runFollowUpsNow() {
   const result = await runFollowUps();
   revalidatePath("/dashboard");
   return result;
+}
+
+/**
+ * The "Simulate missed call" button.
+ *
+ * Runs the exact same handler the Twilio webhook does, so the demo exercises
+ * production code rather than a parallel fake. Clicking it in front of an owner
+ * shows the whole recovery: lead created, caller texted back, owner notified.
+ */
+export async function simulateMissedCall(rawPhone: string) {
+  const auth = await requireOwner();
+  if (!auth.ok) throw new Error("Not authorized");
+
+  const phone = normalizeUsPhone(rawPhone);
+  if (!phone) return { ok: false as const, error: "Enter a valid 10-digit US number." };
+
+  const result = await handleMissedCall(phone);
+  if (!result) return { ok: false as const, error: "Could not record the call." };
+
+  revalidatePath("/dashboard");
+  return { ok: true as const, ...result };
 }

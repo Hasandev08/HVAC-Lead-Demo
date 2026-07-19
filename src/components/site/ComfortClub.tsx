@@ -10,7 +10,7 @@ export function ComfortClub() {
     <section id="comfort-club" className="bg-slate-50 py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="Maintenance Plans"
+          eyebrow={company.sections.comfortClub.eyebrow}
           title={`Join the ${plan.name}`}
           description={plan.pitch}
         />

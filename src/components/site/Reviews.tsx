@@ -8,8 +8,8 @@ export function Reviews() {
     <section id="reviews" className="bg-slate-50 py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="Reviews"
-          title="What your neighbors say"
+          eyebrow={company.sections.reviews.eyebrow}
+          title={company.sections.reviews.title}
           description={`${company.rating.score} out of 5 across ${company.rating.count} ${company.rating.source} reviews.`}
         />
 

@@ -46,13 +46,13 @@ export function Footer() {
               Service Area
             </h3>
             <ul className="mt-4 space-y-2.5">
-              {company.serviceArea.boroughs.map((borough) => (
-                <li key={borough.name}>
+              {company.serviceArea.regions.map((region) => (
+                <li key={region.name}>
                   <a
                     href="#service-area"
                     className="text-sm transition hover:text-accent"
                   >
-                    {borough.name}
+                    {region.name}
                   </a>
                 </li>
               ))}

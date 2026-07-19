@@ -3,10 +3,13 @@ import { redirect } from "next/navigation";
 import { logout } from "@/app/login/actions";
 import { FollowUpButton } from "@/components/dashboard/FollowUpButton";
 import { LeadsTable } from "@/components/dashboard/LeadsTable";
+import { MessageLog, type LoggedMessage } from "@/components/dashboard/MessageLog";
+import { SimulateCallButton } from "@/components/dashboard/SimulateCallButton";
 import { StatsRow } from "@/components/dashboard/StatsRow";
 import { company } from "@/config/company";
 import { followUpDelayMinutes } from "@/lib/follow-up";
 import type { Lead } from "@/lib/leads";
+import { smsMode } from "@/lib/sms";
 import { computeStats } from "@/lib/stats";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { requireOwner } from "@/lib/supabase-server";
@@ -27,12 +30,19 @@ export default async function DashboardPage() {
   }
 
   const db = supabaseAdmin();
-  const { data } = await db!
-    .from("leads")
-    .select("*")
-    .order("created_at", { ascending: false });
 
-  const leads = (data ?? []) as Lead[];
+  // One round trip instead of two sequential ones.
+  const [leadsResult, messagesResult] = await Promise.all([
+    db!.from("leads").select("*").order("created_at", { ascending: false }),
+    db!
+      .from("messages")
+      .select("id,channel,kind,recipient,body,status,created_at")
+      .order("created_at", { ascending: false })
+      .limit(30),
+  ]);
+
+  const leads = (leadsResult.data ?? []) as Lead[];
+  const messages = (messagesResult.data ?? []) as LoggedMessage[];
   const stats = computeStats(leads);
 
   return (
@@ -73,12 +83,17 @@ export default async function DashboardPage() {
 
         <StatsRow stats={stats} />
 
-        <div className="mt-6">
+        <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
           <FollowUpButton delayMinutes={followUpDelayMinutes()} />
+          <SimulateCallButton mode={smsMode()} />
         </div>
 
         <div className="mt-6">
           <LeadsTable leads={leads} />
+        </div>
+
+        <div className="mt-8">
+          <MessageLog messages={messages} mode={smsMode()} />
         </div>
       </main>
     </div>

@@ -9,26 +9,26 @@ export function ServiceArea() {
     <section id="service-area" className="bg-white py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="Service Area"
+          eyebrow={company.sections.serviceArea.eyebrow}
           title={serviceArea.headline}
           description={serviceArea.description}
         />
 
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {serviceArea.boroughs.map((borough, i) => (
-            <Reveal key={borough.name} delay={(i % 3) * 60}>
+          {serviceArea.regions.map((region, i) => (
+            <Reveal key={region.name} delay={(i % 3) * 60}>
               <div className="h-full rounded-2xl border border-slate-200 bg-slate-50/60 p-6 transition hover:border-primary/30 hover:bg-white hover:shadow-lg hover:shadow-slate-200/60">
                 <div className="flex items-center gap-2.5">
                   <PinIcon />
-                  <h3 className="text-lg font-bold text-slate-900">{borough.name}</h3>
+                  <h3 className="text-lg font-bold text-slate-900">{region.name}</h3>
                 </div>
                 <ul className="mt-4 flex flex-wrap gap-1.5">
-                  {borough.neighborhoods.map((hood) => (
+                  {region.areas.map((area) => (
                     <li
-                      key={hood}
+                      key={area}
                       className="rounded-md bg-white px-2.5 py-1 text-xs font-medium text-slate-600 ring-1 ring-slate-200 ring-inset"
                     >
-                      {hood}
+                      {area}
                     </li>
                   ))}
                 </ul>
@@ -41,11 +41,10 @@ export function ServiceArea() {
           <Reveal delay={120}>
             <div className="flex h-full flex-col justify-center rounded-2xl bg-brand p-6 text-center">
               <p className="text-lg font-bold text-white">
-                Don&apos;t see your neighborhood?
+                {company.sections.areaFallback.title}
               </p>
               <p className="mt-1.5 text-sm leading-relaxed text-slate-400">
-                We cover the whole city. Call and we&apos;ll tell you straight
-                whether we can get to you today.
+                {company.sections.areaFallback.body}
               </p>
               <a
                 href={`tel:${company.phone.href}`}

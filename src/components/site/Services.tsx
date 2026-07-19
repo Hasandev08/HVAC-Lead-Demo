@@ -8,9 +8,9 @@ export function Services() {
     <section id="services" className="bg-white py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <SectionHeading
-          eyebrow="What We Do"
-          title="Heating & cooling, done right the first time"
-          description="Whatever's broken, we've seen it before — in a pre-war walk-up, a brownstone, or a new build."
+          eyebrow={company.sections.services.eyebrow}
+          title={company.sections.services.title}
+          description={company.sections.services.description}
         />
 
         <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
