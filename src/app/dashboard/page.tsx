@@ -4,6 +4,7 @@ import { logout } from "@/app/login/actions";
 import { FollowUpButton } from "@/components/dashboard/FollowUpButton";
 import { LeadsTable } from "@/components/dashboard/LeadsTable";
 import { MessageLog, type LoggedMessage } from "@/components/dashboard/MessageLog";
+import { SignOutButton } from "@/components/dashboard/SignOutButton";
 import { SimulateCallButton } from "@/components/dashboard/SimulateCallButton";
 import { StatsRow } from "@/components/dashboard/StatsRow";
 import { company } from "@/config/company";
@@ -60,12 +61,7 @@ export default async function DashboardPage() {
           <div className="flex items-center gap-4">
             <span className="hidden text-sm text-slate-500 sm:inline">{auth.email}</span>
             <form action={logout}>
-              <button
-                type="submit"
-                className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-              >
-                Sign out
-              </button>
+              <SignOutButton />
             </form>
           </div>
         </div>
