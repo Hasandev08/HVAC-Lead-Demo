@@ -137,6 +137,34 @@ If all four happen, the pipeline works and you're ready for Phase 2 (the dashboa
 
 ---
 
+## 6. Follow-up automation (optional)
+
+A lead still marked "new" after `FOLLOW_UP_DELAY_MINUTES` gets chased automatically.
+
+**For a demo, you don't need to set anything up** — the dashboard has a **"Run follow-up now"**
+button. Click it in front of a client and they watch it happen. That's a better demo than
+waiting two minutes anyway.
+
+**For a real deployment**, the endpoint is `/api/cron/follow-up`, protected by `CRON_SECRET`:
+
+- `vercel.json` already schedules it **daily** — that's the most Vercel's free plan allows.
+- For a true 2-minute cadence, use a free external scheduler:
+  1. Sign up at https://cron-job.org
+  2. New cron job → URL: `https://YOUR-APP.vercel.app/api/cron/follow-up`
+  3. Schedule: every minute
+  4. Add a header → `Authorization: Bearer <your CRON_SECRET>`
+
+Test it locally:
+
+```bash
+curl -H "Authorization: Bearer $(grep CRON_SECRET .env.local | cut -d= -f2)" \
+  http://localhost:3000/api/cron/follow-up
+```
+
+Returns `{"checked":N,"sent":N,"skipped":N,"errors":[]}`. Without the header it returns 401.
+
+---
+
 ## Troubleshooting
 
 **No email arrives**

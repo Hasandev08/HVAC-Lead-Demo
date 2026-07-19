@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { logout } from "@/app/login/actions";
+import { FollowUpButton } from "@/components/dashboard/FollowUpButton";
 import { LeadsTable } from "@/components/dashboard/LeadsTable";
 import { StatsRow } from "@/components/dashboard/StatsRow";
 import { company } from "@/config/company";
+import { followUpDelayMinutes } from "@/lib/follow-up";
 import type { Lead } from "@/lib/leads";
 import { computeStats } from "@/lib/stats";
 import { supabaseAdmin } from "@/lib/supabase-admin";
@@ -71,7 +73,11 @@ export default async function DashboardPage() {
 
         <StatsRow stats={stats} />
 
-        <div className="mt-8">
+        <div className="mt-6">
+          <FollowUpButton delayMinutes={followUpDelayMinutes()} />
+        </div>
+
+        <div className="mt-6">
           <LeadsTable leads={leads} />
         </div>
       </main>
