@@ -108,9 +108,13 @@ alter table public.owners enable row level security;
 -- No policies on `owners` at all: nothing but the service role can read or
 -- write it. The policies below query it internally, which RLS permits.
 
--- >>> PUT THE DEMO LOGIN EMAIL HERE <<<
+-- >>> CHANGE THIS to the email you'll log into the dashboard with. <<<
+-- It must match the user you create in Authentication -> Users, or you'll log
+-- in and see zero leads. To change it later, just run:
+--   delete from public.owners where email = 'CHANGE_ME@example.com';
+--   insert into public.owners (email) values ('your@email.com');
 insert into public.owners (email)
-values ('owner@example.com')
+values ('CHANGE_ME@example.com')
 on conflict (email) do nothing;
 
 -- ---------------------------------------------------------------------------
